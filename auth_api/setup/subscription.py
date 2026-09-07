@@ -59,7 +59,7 @@ def ensure_default_features():
             "feature_label": label,
             "parent_custom_subscription_management": parent,
             "is_group": is_group,
-            "is_subscribed": 1,
+            "is_subscribed": 1 if code != "lending" else 0,
             "start_date": today(),
         }).insert(ignore_permissions=True)
     frappe.db.commit()
