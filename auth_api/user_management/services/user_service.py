@@ -1,3 +1,4 @@
+from auth_api.user_management.utils.subscription import get_subscribed_modules
 from auth_api.user_management.repositories.user_repo import UserRepository
 import frappe
 from frappe.permissions import get_all_perms
@@ -124,6 +125,7 @@ class UserService:
             "name",
         )
         installed_apps = frappe.get_installed_apps()
+        subscribed_modules = get_subscribed_modules()
 
         return {
                 "userId": user.name,
@@ -143,5 +145,7 @@ class UserService:
                 "roles": roles,
                 "permission": modules_permissions,
                 "is_zra_enabled":  True if "zra_smart_invoice" in installed_apps else False,
-                "subscribed_modules": installed_apps
+                # "subscribed_modules": installed_apps,
+                "subscribed_modules": subscribed_modules
+
         }

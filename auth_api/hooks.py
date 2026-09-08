@@ -240,3 +240,5 @@ auth_hooks = [
 override_whitelisted_methods = {
     "frappe.handler.handle_exception": "auth_api.user_management.utils.response.handle_exception"
 }
+after_install = "auth_api.setup.subscription.ensure_default_features"
+after_migrate = "auth_api.setup.subscription.ensure_default_features"

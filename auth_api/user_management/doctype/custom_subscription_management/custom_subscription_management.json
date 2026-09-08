@@ -1,0 +1,134 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "field:feature_code",
+ "creation": "2026-09-03 18:12:26.401141",
+ "default_view": "Tree",
+ "doctype": "DocType",
+ "document_type": "System",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_jblp",
+  "is_subscribed",
+  "feature_code",
+  "feature_label",
+  "start_date",
+  "end_date",
+  "column_break_kvgk",
+  "lft",
+  "rgt",
+  "is_group",
+  "old_parent",
+  "parent_custom_subscription_management"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_jblp",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "lft",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Left",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "rgt",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Right",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_group",
+   "fieldtype": "Check",
+   "label": "Is Group"
+  },
+  {
+   "fieldname": "old_parent",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Old Parent",
+   "options": "Custom Subscription Management"
+  },
+  {
+   "fieldname": "parent_custom_subscription_management",
+   "fieldtype": "Link",
+   "ignore_user_permissions": 1,
+   "label": "Parent Custom Subscription Management",
+   "options": "Custom Subscription Management"
+  },
+  {
+   "default": "1",
+   "fieldname": "is_subscribed",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Is Subscribed"
+  },
+  {
+   "fieldname": "feature_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Feature Code",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "feature_label",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Feature Label"
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "label": "End Date"
+  },
+  {
+   "fieldname": "column_break_kvgk",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_tree": 1,
+ "links": [],
+ "modified": "2026-09-03 18:28:11.967375",
+ "modified_by": "Administrator",
+ "module": "User Management",
+ "name": "Custom Subscription Management",
+ "naming_rule": "By fieldname",
+ "nsm_parent_field": "parent_custom_subscription_management",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "show_name_in_global_search": 1,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

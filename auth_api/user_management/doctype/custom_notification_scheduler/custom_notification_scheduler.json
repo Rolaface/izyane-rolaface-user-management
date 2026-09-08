@@ -9,6 +9,7 @@
   "scheduler_name",
   "enabled",
   "frequency",
+  "days_before_due",
   "column_break_glra",
   "reference_doctype",
   "reference_doctype_name"
@@ -51,12 +52,17 @@
    "in_standard_filter": 1,
    "label": "Reference Doctype Name",
    "options": "reference_doctype"
+  },
+  {
+   "fieldname": "days_before_due",
+   "fieldtype": "Int",
+   "label": "Days Before Due"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-08-22 16:11:53.926103",
+ "modified": "2026-08-22 14:58:54.648270",
  "modified_by": "Administrator",
  "module": "User Management",
  "name": "Custom Notification Scheduler",

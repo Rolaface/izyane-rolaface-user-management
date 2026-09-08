@@ -1,3 +1,4 @@
+from auth_api.user_management.utils.subscription import get_subscribed_modules
 import frappe
 from frappe import auth
 from auth_api.user_management.utils.common import generate_keys
@@ -22,7 +23,7 @@ def login_user(username, password):
                 }, pluck = "role",
             )    
     installed_apps = frappe.get_installed_apps()
-
+    subscribed_modules = get_subscribed_modules()
     return {
         "status": "success",
         "message":{
@@ -35,7 +36,8 @@ def login_user(username, password):
                     "gender":user.gender,
                     "roles": roles,
                     "is_zra_enabled":  bool(frappe.conf.get("zra_tpin")),
-                    "subscribed_modules": installed_apps
+                    # "subscribed_modules": installed_apps,
+                    "subscribed_modules": subscribed_modules
 
                 }
     }
