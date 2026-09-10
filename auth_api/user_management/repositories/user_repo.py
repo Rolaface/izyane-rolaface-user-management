@@ -24,7 +24,7 @@ class UserRepository:
         return user
     
     @staticmethod
-    def get_users(search=None, limit_start=0, limit_page_length=10, exclude_current_user=True):
+    def get_users(search=None, roles=None, limit_start=0, limit_page_length=10, exclude_current_user=True):
         
         filters = [
             ["name", "not in", ["Administrator", "Guest"]],
@@ -32,6 +32,18 @@ class UserRepository:
         
         if exclude_current_user and frappe.session.user:
             filters.append(["name", "!=", frappe.session.user])
+
+        if roles:
+            role_users = frappe.get_all(
+                "Has Role",
+                filters={"role": ["in", roles], "parenttype": "User"},
+                pluck="parent"
+            )
+            
+            if not role_users:
+                return [], 0
+                
+            filters.append(["name", "in", role_users])
 
         or_filters = None
         if search:
@@ -43,10 +55,10 @@ class UserRepository:
                 ["username", "like", f"%{search}%"],
             ]
 
-        return frappe.get_all(
+        users = frappe.get_all(
             "User",
             or_filters=or_filters,
-            filters= filters,
+            filters=filters,
             fields=[
                 "name as id",
                 "email",
@@ -59,6 +71,9 @@ class UserRepository:
             limit_page_length=limit_page_length,
             order_by="creation desc"
         )
+        
+        total = len(frappe.get_all("User", filters=filters, or_filters=or_filters, pluck="name"))
+        return users, total
 
     @staticmethod
     def update_user(user_id: str, data: dict) -> frappe.model.document.Document:
