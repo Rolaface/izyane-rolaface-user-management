@@ -60,15 +60,23 @@ def get():
     page = int(data.get("page", 1))
     page_size = int(data.get("page_size", 10))
     search = data.get("search")
+    
+    roles = data.get("roles")
+    if roles and isinstance(roles, str):
+        try:
+            roles = frappe.parse_json(roles)
+        except Exception:
+            roles = [r.strip() for r in roles.split(",")]
 
-    user_response = user_service.UserService.get_users(page, page_size, search)
+    user_response = user_service.UserService.get_users(page, page_size, search, roles)
+    
     return response.send_response_list(
-                            status = "success",
-                            message = "Users fetched successfully.",
-                            data = user_response,
-                            status_code = 200,
-                            http_status = 200,
-                        )
+        status="success",
+        message="Users fetched successfully.",
+        data=user_response,
+        status_code=200,
+        http_status=200,
+    )
 
 @frappe.whitelist(allow_guest=False, methods=["PUT"])
 def update(**payload):

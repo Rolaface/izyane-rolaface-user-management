@@ -21,22 +21,21 @@ class UserService:
             raise
 
     @staticmethod
-    def get_users(page=1, page_size=10, search=""):
+    def get_users(page=1, page_size=10, search="", roles=None):
 
         limit_start = (page - 1) * page_size
-        filters = [
-            ["name", "not in", ["Administrator", "Guest"]],
-        ]
-        users = UserRepository.get_users(
+        
+        # Role filtering is handled entirely in UserRepository.get_users
+
+        users, total = UserRepository.get_users(
             search=search,
+            roles=roles,
             limit_start=limit_start,
             limit_page_length=page_size
         )
 
-        total = frappe.db.count("User", filters=filters)
-
         total_pages = (total + page_size - 1) // page_size
-        print(type(users))
+        
         return {
             "status": "success",
             "data": users,
