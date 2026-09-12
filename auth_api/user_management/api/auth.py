@@ -16,7 +16,7 @@ def login(usr, pwd):
     except frappe.exceptions.AuthenticationError as e:
         return response.unauthorized(str(e))
 
-@frappe.whitelist(allow_guest=True, methods=["POST"])
+@frappe.whitelist(allow_guest=False, methods=["POST"])
 def signup(**payload):
     try:
         data = SignupSchema(**payload).model_dump()
@@ -78,7 +78,7 @@ def get():
         http_status=200,
     )
 
-@frappe.whitelist(allow_guest=True, methods=["PUT"])
+@frappe.whitelist(allow_guest=False, methods=["PUT"])
 def update(**payload):
     try:
         data = UpdateUserSchema(**payload).model_dump()
