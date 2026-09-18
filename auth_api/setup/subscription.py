@@ -9,6 +9,7 @@ DEFAULT_FEATURES = [
     ("erp", None, 1,None),
     ("hrms", None, 1,None),
     ("lending", None, 1,None),
+    ("los", None, 1, None),
 
     # erp children
     ("sales", None, 0,"erp"),
