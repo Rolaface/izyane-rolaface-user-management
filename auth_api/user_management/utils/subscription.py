@@ -39,9 +39,10 @@ def get_subscribed_modules():
         for r in by_parent.get(parent_name, []):
             active = ancestor_active and is_active(r)
             key = r.feature_label or r.feature_code
-            if r.name == "lending":
-                node[key] = active
-            elif r.is_group:
+            # if r.name == "lending":
+            #     node[key] = active
+            # elif r.is_group:
+            if r.is_group:
                 child = build(r.name, active)
                 if add_enabled:
                     child = {"enabled": active, **child}
