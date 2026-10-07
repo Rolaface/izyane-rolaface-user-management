@@ -20,6 +20,6 @@ def build_subscription_response(doc) -> dict:
 
     return {
         "masterSubscriptionName": doc.master_subscription_name,
-        "subscriptionStatus":     doc.status,
+        "subscriptionStatus":     doc.subscription_status,
         "details":                details,
     }
