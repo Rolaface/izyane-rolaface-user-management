@@ -8,7 +8,7 @@
  "field_order": [
   "master_subscription_name",
   "subscription_status",
-  "status"
+  "details"
  ],
  "fields": [
   {
@@ -30,7 +30,7 @@
    "sort_options": 1
   },
   {
-   "fieldname": "status",
+   "fieldname": "details",
    "fieldtype": "JSON",
    "label": "Details"
   }
@@ -38,7 +38,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-10-07 02:32:36.483707",
+ "modified": "2026-10-07 14:57:19.017116",
  "modified_by": "Administrator",
  "module": "User Management",
  "name": "Custom Subscription Details",

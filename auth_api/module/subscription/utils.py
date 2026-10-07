@@ -11,7 +11,7 @@ def parse_details(details):
 
 
 def build_subscription_response(doc) -> dict:
-    details = doc.status
+    details = doc.details
     if isinstance(details, str):
         try:
             details = json.loads(details)
@@ -20,6 +20,6 @@ def build_subscription_response(doc) -> dict:
 
     return {
         "masterSubscriptionName": doc.master_subscription_name,
-        "subscriptionStatus":     doc.subscription_status,
+        "subscriptionStatus":     doc.status,
         "details":                details,
     }

@@ -21,8 +21,8 @@ def create_subscription(name: str, subscription_status: str = None, details=None
     doc = frappe.get_doc({
         "doctype":                  DOCTYPE,
         "master_subscription_name": name,
-        "subscription_status":      subscription_status,
-        "status":                   parse_details(details),
+        "status":      subscription_status,
+        "details":                   parse_details(details),
     })
     doc.insert(ignore_permissions=True)
     frappe.db.commit()
