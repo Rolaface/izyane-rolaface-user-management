@@ -8,7 +8,11 @@
  "field_order": [
   "master_subscription_name",
   "subscription_status",
-  "details"
+  "details",
+  "column_break_gazk",
+  "start_date",
+  "end_date",
+  "trial_end_date"
  ],
  "fields": [
   {
@@ -33,12 +37,31 @@
    "fieldname": "details",
    "fieldtype": "JSON",
    "label": "Details"
+  },
+  {
+   "fieldname": "column_break_gazk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "label": "End Date"
+  },
+  {
+   "fieldname": "trial_end_date",
+   "fieldtype": "Date",
+   "label": "Trial End Date"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-10-07 14:57:19.017116",
+ "modified": "2026-10-08 20:31:56.327769",
  "modified_by": "Administrator",
  "module": "User Management",
  "name": "Custom Subscription Details",

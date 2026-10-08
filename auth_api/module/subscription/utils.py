@@ -19,7 +19,10 @@ def build_subscription_response(doc) -> dict:
             pass
 
     return {
-        "masterSubscriptionName": doc.master_subscription_name,
-        "subscriptionStatus":     doc.subscription_status,
-        "details":                details,
+        "master_subscription_name": doc.master_subscription_name,
+        "subscription_status":      doc.subscription_status,
+        "details":                  details,
+        "start_date":               str(doc.start_date) if doc.start_date else None,
+        "end_date":                 str(doc.end_date) if doc.end_date else None,
+        "trial_end_date":           str(doc.trial_end_date) if doc.trial_end_date else None,
     }
