@@ -1,8 +1,8 @@
 import frappe
-from frappe.utils import getdate
+from frappe.utils import getdate, today
 
-from auth_api.module.subscription.constant import DEFAULT_SUBSCRIPTION_STATUS, DOCTYPE
-from auth_api.module.subscription.utils import build_subscription_response, parse_details
+from auth_api.module.subscription.constant import DEFAULT_SUBSCRIPTION_STATUS, DOCTYPE, LIVE_SUBSCRIPTION_STATUSES
+from auth_api.module.subscription.utils import build_subscribed_modules, build_subscription_response, parse_details
 from auth_api.module.subscription.validate import (
     validate_bool,
     validate_date,
@@ -87,3 +87,14 @@ def delete_subscription(name: str) -> dict:
     frappe.db.commit()
 
     return {"master_subscription_name": name}
+
+
+def get_subscribed_modules() -> dict:
+
+    details = frappe.get_all(
+        DOCTYPE,
+        filters={"subscription_status": ["in", LIVE_SUBSCRIPTION_STATUSES], "start_date": ["<=", today()]},
+        or_filters=[["end_date", "is", "not set"], ["end_date", ">", today()]],
+        pluck="details",
+    )
+    return build_subscribed_modules(details)

@@ -26,3 +26,21 @@ def build_subscription_response(doc) -> dict:
         "end_date":                 str(doc.end_date) if doc.end_date else None,
         "trial_end_date":           str(doc.trial_end_date) if doc.trial_end_date else None,
     }
+
+
+def build_subscribed_modules(details_list) -> dict:
+
+    result = {}
+    for details in details_list:
+        if isinstance(details, str):
+            try:
+                details = json.loads(details)
+            except ValueError:
+                continue
+        for row in (details or {}).get("modules") or []:
+            if not row.get("product") or not row.get("module"):
+                continue
+            modules = result.setdefault(row["product"], [])
+            if row["module_name"] not in modules:
+                modules.append(row["module_name"])
+    return result
