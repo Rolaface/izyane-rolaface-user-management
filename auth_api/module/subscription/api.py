@@ -23,7 +23,7 @@ def create():
     except ValueError as e:
         return response.error(str(e))
 
-@frappe.whitelist(allow_guest=False, methods=["PUT"])
+@frappe.whitelist(allow_guest=True, methods=["PUT"])
 def update():
     data = frappe.request.get_json() or {}
 
@@ -43,7 +43,7 @@ def update():
     except ValueError as e:
         return response.error(str(e))
 
-@frappe.whitelist(allow_guest=False, methods=["DELETE"])
+@frappe.whitelist(allow_guest=True, methods=["DELETE"])
 def delete():
     data = frappe.request.get_json(silent=True) or frappe.request.args or {}
 
