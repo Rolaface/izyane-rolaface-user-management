@@ -25,7 +25,7 @@ def create_subscription(name: str, subscription_status: str = None, details=None
         "details":                   parse_details(details),
     })
     doc.insert(ignore_permissions=True)
-    frappe.db.commit()
+    # frappe.db.commit()
 
     return build_subscription_response(doc)
 
