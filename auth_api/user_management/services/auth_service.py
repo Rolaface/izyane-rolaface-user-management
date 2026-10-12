@@ -1,4 +1,5 @@
 from auth_api.user_management.utils.subscription import get_subscribed_modules
+from auth_api.module.subscription.service import get_subscribed_modules as get_subscribed_modules_from_details
 import frappe
 from frappe import auth
 from auth_api.user_management.utils.common import generate_keys
@@ -23,7 +24,8 @@ def login_user(username, password):
                 }, pluck = "role",
             )    
     installed_apps = frappe.get_installed_apps()
-    subscribed_modules = get_subscribed_modules()
+    # subscribed_modules = get_subscribed_modules()
+    subscribed_modules = get_subscribed_modules_from_details()
     return {
         "status": "success",
         "message":{
