@@ -1,5 +1,6 @@
 from auth_api.user_management.utils.subscription import get_subscribed_modules
 from auth_api.module.subscription.service import get_subscribed_modules as get_subscribed_modules_from_details
+from auth_api.module.subscription.service import is_subscription_expired
 import frappe
 from frappe import auth
 from auth_api.user_management.utils.common import generate_keys
@@ -39,7 +40,8 @@ def login_user(username, password):
                     "roles": roles,
                     "is_zra_enabled":  bool(frappe.conf.get("zra_tpin")),
                     # "subscribed_modules": installed_apps,
-                    "subscribed_modules": subscribed_modules
+                    "subscribed_modules": subscribed_modules,
+                    "subscription_expired": is_subscription_expired(),
 
                 }
     }

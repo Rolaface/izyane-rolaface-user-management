@@ -1,7 +1,12 @@
 import frappe
 from frappe.utils import getdate, today
 
-from auth_api.module.subscription.constant import DEFAULT_SUBSCRIPTION_STATUS, DOCTYPE, LIVE_SUBSCRIPTION_STATUSES
+from auth_api.module.subscription.constant import (
+    CANCELLED_SUBSCRIPTION_STATUS,
+    DEFAULT_SUBSCRIPTION_STATUS,
+    DOCTYPE,
+    LIVE_SUBSCRIPTION_STATUSES,
+)
 from auth_api.module.subscription.utils import build_subscribed_modules, build_subscription_response, parse_details
 from auth_api.module.subscription.validate import (
     validate_bool,
@@ -89,12 +94,30 @@ def delete_subscription(name: str) -> dict:
     return {"master_subscription_name": name}
 
 
-def get_subscribed_modules() -> dict:
+def _live_subscription_filters() -> dict:
+    """Subscriptions valid today: not Expired / Cancelled, started, and not ended."""
+    return {
+        "filters": {"subscription_status": ["in", LIVE_SUBSCRIPTION_STATUSES], "start_date": ["<=", today()]},
+        "or_filters": [["end_date", "is", "not set"], ["end_date", ">", today()]],
+    }
 
-    details = frappe.get_all(
-        DOCTYPE,
-        filters={"subscription_status": ["in", LIVE_SUBSCRIPTION_STATUSES], "start_date": ["<=", today()]},
-        or_filters=[["end_date", "is", "not set"], ["end_date", ">", today()]],
-        pluck="details",
-    )
+
+def get_subscribed_modules() -> dict:
+    details = frappe.get_all(DOCTYPE, **_live_subscription_filters(), pluck="details")
+    if not details:
+        details = frappe.get_all(
+            DOCTYPE,
+            filters={"subscription_status": ["!=", CANCELLED_SUBSCRIPTION_STATUS]},
+            order_by="start_date desc, creation desc",
+            limit=1,
+            pluck="details",
+        )
     return build_subscribed_modules(details)
+
+
+def is_subscription_expired() -> bool:
+    """True when this site has subscriptions but none is valid today.
+    A site without any subscription record (e.g. the master) is never treated as expired."""
+    if not frappe.get_all(DOCTYPE, limit=1, pluck="name"):
+        return False
+    return  not frappe.get_all(DOCTYPE, **_live_subscription_filters(), limit=1, pluck="name")

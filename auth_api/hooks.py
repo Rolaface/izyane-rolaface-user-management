@@ -192,6 +192,8 @@ app_license = "mit"
 # Request Events
 # ----------------
 # before_request = ["auth_api.utils.before_request"]
+before_request = ["auth_api.module.subscription.access.enforce_read_only_if_expired"]
+after_request = ["auth_api.module.subscription.access.expired_write_response"]
 # after_request = ["auth_api.utils.after_request"]
 
 # Job Events
