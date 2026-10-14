@@ -1,4 +1,6 @@
+from auth_api.role_management.constant import ALLOWED_SORT_FIELDS
 import frappe
+from frappe.query_builder import Order
 
 def validate_role_name(role_name: str) -> None:
     if not role_name:
@@ -47,3 +49,14 @@ def delete_removed_permissions(role_name: str, incoming_modules: list[str]) -> N
                             )
         for name in custom_docperms:
             frappe.delete_doc("Custom DocPerm", name, ignore_permissions=True, force=True)
+
+def _parse_order_by(order_by: str):
+    """Return (field, Order) from strings like 'role_name desc'; fall back to creation desc."""
+    parts = (order_by or "").strip().split()
+    field = parts[0] if parts else "creation"
+    direction = parts[1].lower() if len(parts) > 1 else "asc"
+
+    if field not in ALLOWED_SORT_FIELDS:
+        field = "creation"
+    order = Order.desc if direction == "desc" else Order.asc
+    return field, order

@@ -1,8 +1,11 @@
+from auth_api.role_management.constant import ALWAYS_INCLUDED_ROLES
 from auth_api.role_management.services.permission_service import create_permission
-from auth_api.role_management.utils.role_utils import build_role_search_filter, delete_removed_permissions, validate_role_exists, validate_role_name, build_role_doc
+from auth_api.role_management.utils.role_utils import _parse_order_by, delete_removed_permissions, validate_role_exists, validate_role_name, build_role_doc
 import frappe
 from frappe.permissions import get_all_perms
 from auth_api.role_management.utils.permission_mapper import expand_with_linked_permissions
+from frappe.utils import cint
+from frappe.query_builder.functions import Count
 
 def create_role(role_name: str, permission: list = []) -> dict:
    
@@ -38,54 +41,55 @@ def update_role_status(role_id: str, is_disabled: bool):
         "disabled": is_disabled,
     }
 
-def get_all_roles(page, page_size, search: str = None, order_by: str = "creation desc") -> dict:
-    filters    = {"is_custom": 1}
+def get_all_roles(page=1, page_size=10, search: str = None, order_by: str = "creation desc") -> dict:
+    page = max(1, cint(page))
+    page_size = max(1, min(cint(page_size) or 10, 100))
+    limit_start = (page - 1) * page_size
 
-    or_filters    = build_role_search_filter(search=search)
-    limit_start   = (page - 1) * page_size
+    Role = frappe.qb.DocType("Role")
 
-    total = frappe.db.count("Role", filters=filters) #@TODO: If Filters are added, then only incule is_cutom: 1 filters
+    # Custom roles plus the roles we always show (Employee)
+    condition = (Role.is_custom == 1) | (Role.name.isin(ALWAYS_INCLUDED_ROLES))
 
-    roles = frappe.db.get_all(
-        doctype = "Role",
-        filters = filters,
-        or_filters = or_filters or None,
-        fields = ["name", "role_name", "disabled"],
-        order_by = order_by,
-        limit_start  = limit_start,
-        limit_page_length = page_size,
-    )
+    if search:
+        like = f"%{search.strip()}%"
+        condition &= (Role.name.like(like)) | (Role.role_name.like(like))
+
+    # Total uses the same condition as the data query, so pagination always matches
+    total = (
+        frappe.qb.from_(Role)
+        .select(Count("*"))
+        .where(condition)
+    ).run()[0][0]
+
+    sort_field, sort_order = _parse_order_by(order_by)
+
+    roles = (
+        frappe.qb.from_(Role)
+        .select(Role.name, Role.role_name, Role.disabled)
+        .where(condition)
+        .orderby(Role[sort_field], order=sort_order)
+        .orderby(Role.name)  # tie-breaker for stable paging
+        .limit(page_size)
+        .offset(limit_start)
+    ).run(as_dict=True)
 
     normalized = [
-        {
-            "Id": role.name,
-            "roleName": role.role_name,
-            "disabled": role.disabled
-        }
-        for role in roles
+        {"Id": r.name, "roleName": r.role_name, "disabled": r.disabled}
+        for r in roles
     ]
-
-    employee_role = frappe.db.get_value("Role", "Employee", ["name", "role_name", "disabled"], as_dict=True)
-
-    if employee_role and not any(r["Id"] == "Employee" for r in normalized):
-        normalized.append({
-            "Id":       employee_role.name,
-            "roleName": employee_role.role_name,
-            "disabled": employee_role.disabled,
-        })
-        total += 1
 
     total_pages = max(1, -(-total // page_size))
 
     return {
         "data": normalized,
         "pagination": {
-            "page":        page,
-            "page_size":   page_size,
-            "total":       total,
+            "page": page,
+            "page_size": page_size,
+            "total": total,
             "total_pages": total_pages,
-            "has_next":    page < total_pages,
-            "has_prev":    page > 1,
+            "has_next": page < total_pages,
+            "has_prev": page > 1,
         },
     }
 
