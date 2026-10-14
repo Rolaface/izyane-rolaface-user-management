@@ -21,7 +21,7 @@ class UserService:
             raise
 
     @staticmethod
-    def get_users(page=1, page_size=10, search="", roles=None):
+    def get_users(page=1, page_size=10, search="", roles=None, order_by="creation desc") -> dict:
 
         limit_start = (page - 1) * page_size
         
@@ -31,7 +31,8 @@ class UserService:
             search=search,
             roles=roles,
             limit_start=limit_start,
-            limit_page_length=page_size
+            limit_page_length=page_size,
+            order_by=order_by
         )
 
         total_pages = (total + page_size - 1) // page_size

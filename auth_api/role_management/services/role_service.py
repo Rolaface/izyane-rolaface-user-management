@@ -38,7 +38,7 @@ def update_role_status(role_id: str, is_disabled: bool):
         "disabled": is_disabled,
     }
 
-def get_all_roles(page, page_size, search: str = None) -> dict:
+def get_all_roles(page, page_size, search: str = None, order_by: str = "creation desc") -> dict:
     filters    = {"is_custom": 1}
 
     or_filters    = build_role_search_filter(search=search)
@@ -51,7 +51,7 @@ def get_all_roles(page, page_size, search: str = None) -> dict:
         filters = filters,
         or_filters = or_filters or None,
         fields = ["name", "role_name", "disabled"],
-        order_by = "creation desc",
+        order_by = order_by,
         limit_start  = limit_start,
         limit_page_length = page_size,
     )

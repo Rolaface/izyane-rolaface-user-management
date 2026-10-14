@@ -29,8 +29,8 @@ def get():
         page_size=int(data.get("page_size", 10))
 
         search      = data.get("search", "").strip() or None
-
-        result = get_all_roles(page, page_size, search)
+        order_by    = data.get("order_by", "creation desc")
+        result = get_all_roles(page, page_size, search, order_by=order_by)
 
         return response.send_response_list(
                             status = "success",

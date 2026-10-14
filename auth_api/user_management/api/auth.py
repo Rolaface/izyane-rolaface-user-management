@@ -60,7 +60,8 @@ def get():
     page = int(data.get("page", 1))
     page_size = int(data.get("page_size", 10))
     search = data.get("search")
-    
+    order_by = data.get("order_by", "creation desc")
+
     roles = data.get("roles")
     if roles and isinstance(roles, str):
         try:
@@ -68,7 +69,7 @@ def get():
         except Exception:
             roles = [r.strip() for r in roles.split(",")]
 
-    user_response = user_service.UserService.get_users(page, page_size, search, roles)
+    user_response = user_service.UserService.get_users(page, page_size, search, roles, order_by)
     
     return response.send_response_list(
         status="success",

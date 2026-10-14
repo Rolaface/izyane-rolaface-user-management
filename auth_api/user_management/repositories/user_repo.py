@@ -24,7 +24,7 @@ class UserRepository:
         return user
     
     @staticmethod
-    def get_users(search=None, roles=None, limit_start=0, limit_page_length=10, exclude_current_user=True):
+    def get_users(search=None, roles=None, limit_start=0, limit_page_length=10, exclude_current_user=True, order_by="creation desc"):
         
         filters = [
             ["name", "not in", ["Administrator", "Guest"]],
@@ -69,7 +69,7 @@ class UserRepository:
             ],
             limit_start=limit_start,
             limit_page_length=limit_page_length,
-            order_by="creation desc"
+            order_by=order_by
         )
         
         total = len(frappe.get_all("User", filters=filters, or_filters=or_filters, pluck="name"))
